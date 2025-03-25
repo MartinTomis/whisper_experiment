@@ -35,6 +35,7 @@ six==1.17.0
 sympy==1.13.3
 tokenizers==0.20.3
 torch==2.2.2
+torchaudio==2.2.2
 tqdm==4.67.1
 transformers==4.46.3
 typing-extensions==4.12.2
