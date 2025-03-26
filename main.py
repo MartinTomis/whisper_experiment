@@ -17,8 +17,8 @@ hf_token = os.getenv("HF_TOKEN")
 
 
 # Definitions
-model_id = "openai/whisper-base" # medium, tiny, base, small, whisper-large-v3
-audio_path = "/Users/martintomis/projects/Trask/2367d614-0d52-49d4-a9cd-0ff9dd2dbd72_20240624T06_58_UTC.wav"
+model_id = "openai/whisper-large-v3" # medium, tiny, base, small, whisper-large-v3
+audio_path = "audio1.wav"
 target_sample_rate = 16000
 language = "cs"               
 task = "transcribe"
@@ -53,6 +53,7 @@ if sample_rate != target_sample_rate:
 waveform = waveform.squeeze(0)  # shape: [num_samples]
 
 # Diarize your audio file (should be mono, 16kHz)
+print("*******RUNNING DIARIZATION*******")
 diarization = pipeline(audio_path )
 
 def format_timestamp(seconds):
