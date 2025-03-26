@@ -17,7 +17,7 @@ hf_token = os.getenv("HF_TOKEN")
 
 
 # Definitions
-model_id = "openai/whisper-tiny" # medium, tiny, base, small, whisper-large-v3
+model_id = "openai/whisper-base" # medium, tiny, base, small, whisper-large-v3
 audio_path = "/Users/martintomis/projects/Trask/2367d614-0d52-49d4-a9cd-0ff9dd2dbd72_20240624T06_58_UTC.wav"
 target_sample_rate = 16000
 language = "cs"               
