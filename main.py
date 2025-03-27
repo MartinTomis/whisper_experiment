@@ -17,7 +17,7 @@ hf_token = os.getenv("HF_TOKEN")
 
 
 # Definitions
-model_id = "openai/whisper-large-v3" # medium, tiny, base, small, whisper-large-v3
+model_id = "whisper-large-v3" # medium, tiny, base, small, whisper-large-v3
 audio_path = "audio1.wav"
 target_sample_rate = 16000
 language = "cs"               
@@ -25,13 +25,16 @@ task = "transcribe"
 
 
 # Transcription model load
-processor = AutoProcessor.from_pretrained(model_id)
-model = AutoModelForSpeechSeq2Seq.from_pretrained(model_id).to(device)
+#processor = AutoProcessor.from_pretrained(model_id)
+processor = AutoProcessor.from_pretrained('models/'+model_id)
+#model = AutoModelForSpeechSeq2Seq.from_pretrained(model_id).to(device)
+model = AutoModelForSpeechSeq2Seq.from_pretrained('models/'+model_id).to(device)
 chunk_duration = 30  # seconds
 chunk_size = chunk_duration * target_sample_rate  # samples per chunk
 
 # Diarization pipeline load
-pipeline = Pipeline.from_pretrained("pyannote/speaker-diarization", use_auth_token=hf_token)
+pipeline = Pipeline.from_pretrained("models/pyannote_model")
+#pipeline = Pipeline.from_pretrained("pyannote/speaker-diarization", use_auth_token=hf_token)
 
 
 
