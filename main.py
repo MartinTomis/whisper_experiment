@@ -131,6 +131,7 @@ for seg in segments:
     start = format_timestamp(seg["start"])
     end = format_timestamp(seg["end"])
     result_string.append(f"[{seg['speaker']} | {start} - {end}] {seg['text']}")
+    print(f"[{seg['speaker']} | {start} - {end}] {seg['text']}")
 
 transcript= "\n".join(result_string )
 
@@ -171,7 +172,7 @@ model = AutoModelForCausalLM.from_pretrained('models/'+model_id, torch_dtype=tor
 print("****** MISTRAL MODEL LOADED SUCCESSFULLY *********")
 
 # Create a prompt to ask a question about it
-prompt = f"""<s>[INST] What did the customer want to buy and in which quantity? Return answer in computer readable form. [/INST] {translated_transcript}"""
+prompt = f"""<s>[INST] What did the customer want to buy and in which quantity? Return only the answer in computer readable form. [/INST] {transcript}"""
 
 inputs = tokenizer(prompt, return_tensors="pt").to(device)
 outputs = model.generate(**inputs, max_new_tokens=100)
