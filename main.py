@@ -15,6 +15,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 if torch.cuda.is_available():
     print("✅ GPU is available!")
     print("GPU name:", torch.cuda.get_device_name(0))
+    print("Device:", torch.cuda.get_device_name(0))
 else:
     print("❌ No GPU available.")
 
@@ -91,9 +92,13 @@ for turn, _, speaker in diarization.itertracks(yield_label=True):
         task=task,
     )
     input_features = inputs.input_features.to(device)
+    attention_mask = inputs.get("attention_mask", None)
+    if attention_mask is not None:
+        attention_mask = attention_mask.to(device)
 
     generated_ids = model.generate(
         input_features,
+        attention_mask=attention_mask,
         max_length=448,
         num_beams=1,
         do_sample=False
