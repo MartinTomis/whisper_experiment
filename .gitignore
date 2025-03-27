@@ -1,4 +1,5 @@
 venv/
 .env
 audio1.wav
+audio2.wav
 models/

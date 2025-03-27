@@ -2,6 +2,7 @@
 
 
 import os
+import sys
 from dotenv import load_dotenv
 import torch
 torch.set_num_threads(4)
@@ -11,6 +12,10 @@ from transformers import AutoProcessor,AutoTokenizer, AutoModelForSpeechSeq2Seq,
 
 from pyannote.audio import Pipeline
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+if len(sys.argv) < 2:
+    print("Usage: python your_script.py <audio_file.wav>")
+    sys.exit(1)
 
 
 if torch.cuda.is_available():
@@ -53,6 +58,7 @@ inputs = tokenizer(prompt, return_tensors="pt").to(device)
 outputs = model.generate(**inputs, max_new_tokens=100)
 
 response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+print("RESPONDING TO A QUESTION ABOUT THE INTERACTION")
 print(response)
 ####
 
@@ -69,7 +75,7 @@ model = MarianMTModel.from_pretrained(model_name)
 text = "The customer ordered two boxes of green tea and one jar of honey."
 
 # Tokenize and translate
-inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True)
+inputs = tokenizer(response, return_tensors="pt", padding=True, truncation=True)
 translated = model.generate(**inputs)
 
 # Decode the result
