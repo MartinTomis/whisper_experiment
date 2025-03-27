@@ -125,14 +125,14 @@ for turn, _, speaker in diarization.itertracks(yield_label=True):
     })
 
 
-
+result_string = []
 
 for seg in segments:
     start = format_timestamp(seg["start"])
     end = format_timestamp(seg["end"])
-    print(f"[{seg['speaker']} | {start} - {end}] {seg['text']}")
+    result_string.append(f"[{seg['speaker']} | {start} - {end}] {seg['text']}")
 
-
+transcript= "\n".join(result_string )
 
 
 ######
@@ -144,13 +144,6 @@ import torch
 model_id = "mistralai/Mistral-7B-Instruct-v0.3"
 tokenizer = AutoTokenizer.from_pretrained('models/'+model_id)
 model = AutoModelForCausalLM.from_pretrained('models/'+model_id, torch_dtype=torch.float16).to(device)
-
-# Example English transcript
-transcript = """
-Customer: Hi, I’d like to order three boxes of green tea and a packet of honey.
-Agent: Sure, would you like anything else?
-Customer: No, that will be all for now.
-"""
 
 # Create a prompt to ask a question about it
 prompt = f"""<s>[INST] What did the customer want to buy? [/INST] {transcript}"""
