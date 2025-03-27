@@ -168,6 +168,8 @@ model_id = "mistralai/Mistral-7B-Instruct-v0.3"
 tokenizer = AutoTokenizer.from_pretrained('models/'+model_id)
 model = AutoModelForCausalLM.from_pretrained('models/'+model_id, torch_dtype=torch.float16).to(device)
 
+print("****** MISTRAL MODEL LOADED SUCCESSFULLY *********")
+
 # Create a prompt to ask a question about it
 prompt = f"""<s>[INST] What did the customer want to buy and in which quantity? Return answer in computer readable form. [/INST] {translated_transcript}"""
 
