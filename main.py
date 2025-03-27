@@ -4,11 +4,19 @@
 import os
 from dotenv import load_dotenv
 import torch
+torch.set_num_threads(4)
 import torchaudio
 from datasets import load_dataset
 from transformers import AutoProcessor, AutoModelForSpeechSeq2Seq, WhisperForConditionalGeneration, pipeline
 from pyannote.audio import Pipeline
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+
+if torch.cuda.is_available():
+    print("✅ GPU is available!")
+    print("GPU name:", torch.cuda.get_device_name(0))
+else:
+    print("❌ No GPU available.")
 
 
 load_dotenv()
@@ -26,14 +34,17 @@ task = "transcribe"
 
 # Transcription model load
 #processor = AutoProcessor.from_pretrained(model_id)
+print("*******IAutoProcessor*******")
 processor = AutoProcessor.from_pretrained('models/'+model_id)
 #model = AutoModelForSpeechSeq2Seq.from_pretrained(model_id).to(device)
+print("*******AutoModelForSpeechSeq2Seq*******")
 model = AutoModelForSpeechSeq2Seq.from_pretrained('models/'+model_id).to(device)
 chunk_duration = 30  # seconds
 chunk_size = chunk_duration * target_sample_rate  # samples per chunk
 
 # Diarization pipeline load
-pipeline = Pipeline.from_pretrained("models/pyannote_model")
+print("*******INITIALIZING DIARIZATION MODEL*******")
+pipeline = Pipeline.from_pretrained("models/pyannote_model/config.yaml", use_auth_token=hf_token)
 #pipeline = Pipeline.from_pretrained("pyannote/speaker-diarization", use_auth_token=hf_token)
 
 
@@ -58,6 +69,7 @@ waveform = waveform.squeeze(0)  # shape: [num_samples]
 # Diarize your audio file (should be mono, 16kHz)
 print("*******RUNNING DIARIZATION*******")
 diarization = pipeline(audio_path )
+print("*******DIARIZATION DONE*******")
 
 def format_timestamp(seconds):
     m, s = divmod(int(seconds), 60)
@@ -66,6 +78,7 @@ def format_timestamp(seconds):
 segments = []
 
 for turn, _, speaker in diarization.itertracks(yield_label=True):
+    print(f"{turn} - {speaker}")
     start_sample = int(turn.start * target_sample_rate )
     end_sample = int(turn.end * target_sample_rate )
     chunk = waveform[start_sample:end_sample]

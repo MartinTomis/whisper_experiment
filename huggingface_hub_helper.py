@@ -17,3 +17,9 @@ snapshot_download(
     local_dir="models/whisper-large-v3",
     local_dir_use_symlinks=False  # optional: copies instead of symlinks
 )
+
+snapshot_download(
+    repo_id="openai/whisper-tiny",
+    local_dir="models/whisper-tiny",
+    local_dir_use_symlinks=False  # optional: copies instead of symlinks
+)
