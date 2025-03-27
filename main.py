@@ -139,10 +139,10 @@ transcript= "\n".join(result_string )
 #################3
 from transformers import MarianMTModel, MarianTokenizer
 
-model_name = "Helsinki-NLP/opus-mt-cs-en"
+translation_model_name = "Helsinki-NLP/opus-mt-cs-en"
 
-tokenizer = MarianTokenizer.from_pretrained(model_name)
-model = MarianMTModel.from_pretrained(model_name)
+tokenizer = MarianTokenizer.from_pretrained("models/" + translation_model_name)
+model = MarianMTModel.from_pretrained("models/" + translation_model_name)
 
 # Example English sentence
 text = "The customer ordered two boxes of green tea and one jar of honey."
