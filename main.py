@@ -7,7 +7,8 @@ import torch
 torch.set_num_threads(4)
 import torchaudio
 from datasets import load_dataset
-from transformers import AutoProcessor, AutoModelForSpeechSeq2Seq, WhisperForConditionalGeneration, pipeline
+from transformers import AutoProcessor,AutoTokenizer, AutoModelForSpeechSeq2Seq, AutoModelForCausalLM, WhisperForConditionalGeneration, pipeline,MBartForConditionalGeneration, MBart50TokenizerFast
+
 from pyannote.audio import Pipeline
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -22,6 +23,61 @@ else:
 
 load_dotenv()
 hf_token = os.getenv("HF_TOKEN")
+
+
+
+######
+
+
+
+# Prompt example
+from transformers import AutoTokenizer, AutoModelForCausalLM
+import torch
+
+# Load the model
+model_id = "mistralai/Mistral-7B-Instruct-v0.3"
+tokenizer = AutoTokenizer.from_pretrained('models/'+model_id)
+model = AutoModelForCausalLM.from_pretrained('models/'+model_id, torch_dtype=torch.float16).to(device)
+
+# Example English transcript
+transcript = """
+Customer: Hi, I’d like to order three boxes of green tea and a packet of honey.
+Agent: Sure, would you like anything else?
+Customer: No, that will be all for now.
+"""
+
+# Create a prompt to ask a question about it
+prompt = f"""<s>[INST] What did the customer want to buy? [/INST] {transcript}"""
+
+inputs = tokenizer(prompt, return_tensors="pt").to(device)
+outputs = model.generate(**inputs, max_new_tokens=100)
+
+response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+print(response)
+####
+
+
+#################3
+from transformers import MarianMTModel, MarianTokenizer
+
+model_name = "Helsinki-NLP/opus-mt-en-cs"
+
+tokenizer = MarianTokenizer.from_pretrained(model_name)
+model = MarianMTModel.from_pretrained(model_name)
+
+# Example English sentence
+text = "The customer ordered two boxes of green tea and one jar of honey."
+
+# Tokenize and translate
+inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True)
+translated = model.generate(**inputs)
+
+# Decode the result
+output = tokenizer.decode(translated[0], skip_special_tokens=True)
+print(output)
+
+###################
+
 
 
 
