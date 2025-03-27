@@ -178,6 +178,9 @@ inputs = tokenizer(prompt, return_tensors="pt").to(device)
 outputs = model.generate(**inputs, max_new_tokens=100)
 
 response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+
+
+answer = response.split("[/INST]")[-1].strip()
 print("RESPONDING TO A QUESTION ABOUT THE INTERACTION")
-print(response)
+print(answer)
 ####
