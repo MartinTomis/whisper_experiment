@@ -19,11 +19,11 @@ if len(sys.argv) < 2:
 
 
 if torch.cuda.is_available():
-    print("✅ GPU is available!")
+    print("GPU availability: TRUE ✅")
     print("GPU name:", torch.cuda.get_device_name(0))
     print("Device:", torch.cuda.get_device_name(0))
 else:
-    print("❌ No GPU available.")
+    print("GPU availability: FALSE ❌")
 
 
 load_dotenv()
@@ -135,6 +135,29 @@ for seg in segments:
 transcript= "\n".join(result_string )
 
 
+
+#################3
+from transformers import MarianMTModel, MarianTokenizer
+
+model_name = "Helsinki-NLP/opus-mt-cs-en"
+
+tokenizer = MarianTokenizer.from_pretrained(model_name)
+model = MarianMTModel.from_pretrained(model_name)
+
+# Example English sentence
+text = "The customer ordered two boxes of green tea and one jar of honey."
+
+# Tokenize and translate
+inputs = tokenizer(transcript, return_tensors="pt", padding=True, truncation=True)
+translated = model.generate(**inputs)
+
+# Decode the result
+translated_transcript = tokenizer.decode(translated[0], skip_special_tokens=True)
+print(translated_transcript)
+
+###################
+
+
 ######
 # Prompt example
 from transformers import AutoTokenizer, AutoModelForCausalLM
@@ -146,7 +169,7 @@ tokenizer = AutoTokenizer.from_pretrained('models/'+model_id)
 model = AutoModelForCausalLM.from_pretrained('models/'+model_id, torch_dtype=torch.float16).to(device)
 
 # Create a prompt to ask a question about it
-prompt = f"""<s>[INST] What did the customer want to buy? [/INST] {transcript}"""
+prompt = f"""<s>[INST] What did the customer want to buy and in which quantity? Return answer in computer readable form. [/INST] {translated_transcript}"""
 
 inputs = tokenizer(prompt, return_tensors="pt").to(device)
 outputs = model.generate(**inputs, max_new_tokens=100)
@@ -155,25 +178,3 @@ response = tokenizer.decode(outputs[0], skip_special_tokens=True)
 print("RESPONDING TO A QUESTION ABOUT THE INTERACTION")
 print(response)
 ####
-
-
-#################3
-from transformers import MarianMTModel, MarianTokenizer
-
-model_name = "Helsinki-NLP/opus-mt-en-cs"
-
-tokenizer = MarianTokenizer.from_pretrained(model_name)
-model = MarianMTModel.from_pretrained(model_name)
-
-# Example English sentence
-text = "The customer ordered two boxes of green tea and one jar of honey."
-
-# Tokenize and translate
-inputs = tokenizer(response, return_tensors="pt", padding=True, truncation=True)
-translated = model.generate(**inputs)
-
-# Decode the result
-output = tokenizer.decode(translated[0], skip_special_tokens=True)
-print(output)
-
-###################
