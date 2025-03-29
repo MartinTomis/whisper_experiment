@@ -10,6 +10,18 @@
 Account on HuggingFace.com is required. Access token should be saved as variable HF_TOKEN in .env.
 Add or copy .env into the main dir.
 
+ffmpeg (Fast Forward MPEG - command line tools for audio processing) is required to process audio files by many of the packages. It can be checked withé
+```
+ffmpeg -version
+```
+
+If it is missing, install it (on Mac)
+
+```
+brew install ffmpeg
+```
+
+
 
 ### 2. Installation
 ```
