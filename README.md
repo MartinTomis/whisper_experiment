@@ -12,6 +12,7 @@ Add or copy .env into the main dir.
 
 
 ### 2. Installation
+```
 mkdir whisper_experiment
 cd whisper_experiment
 git clone https://github.com/MartinTomis/whisper_experiment/
@@ -20,9 +21,12 @@ cd models
 mkdir models/Helsinki-NLP/
 cd ../
 python huggingface_hub_helper.py
+```
 
 ### 3. Check CUDA
+```
 nvidia-smi
+```
 
 If it fails, CUDA is not installed, but it may give a hint how it can be installed. e.g. with:
 
@@ -31,17 +35,21 @@ sudo apt install nvidia-utils-390         # version 390.157-0ubuntu0.22.04.2, or
 sudo apt install nvidia-utils-418-server  # version 418.226.00-0ubuntu5~0.22.04.1 or
 sudo apt install nvidia-utils-535         # version 535.183.01-0ubuntu0.22.04.1
 
-Then intall it with 
+Then intall it with
+```
 sudo apt update
 sudo apt install -y nvidia-driver-535 nvidia-utils-535
-
 sudo reboot
-
+```
+Then check CUDA again:
+```
 nvidia-smi
-
+```
 
 ### 4. Running it
+```
 python main.py audio.wav
-. If at least drivers are present (), then it can be installed as:
+```
+
 
 
